@@ -1,0 +1,301 @@
+{
+  "content": {
+    "hero": {
+      "title": "Hadirkan Praktisi Industri ke Ruang Kelas Anda",
+      "subtitle": "Layanan Guru Tamu, Dosen Tamu, dan Pembicara Seminar profesional untuk sekolah dan perguruan tinggi di seluruh Indonesia.",
+      "badge": "Mitra Pendidikan Terpercaya",
+      "benefits": [
+        "Praktisi industri berpengalaman",
+        "Materi relevan & aplikatif",
+        "Fleksibel sesuai kurikulum"
+      ],
+      "cta_primary": {
+        "text": "Ajukan Praktisi Mengajar",
+        "link": "#kontak"
+      },
+      "cta_secondary": {
+        "text": "Konsultasi Gratis",
+        "link": "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar"
+      },
+      "image": "/images/hero-image.jpg",
+      "stats": [
+        {
+          "value": "98%",
+          "label": "Tingkat Kepuasan"
+        },
+        {
+          "value": "200+",
+          "label": "Praktisi Terverifikasi"
+        }
+      ]
+    },
+    "about": {
+      "section_title": "Tentang Kami",
+      "title": "Menjembatani Industri dan Pendidikan",
+      "description": "Praktisi Mengajar adalah platform yang menghubungkan profesional industri dengan institusi pendidikan di Indonesia. Kami berkomitmen untuk memperkaya pengalaman belajar peserta didik dengan wawasan langsung dari dunia kerja.",
+      "sub_description": "Dengan jaringan lebih dari 200 praktisi terverifikasi dari berbagai bidang industri, kami siap menghadirkan narasumber yang tepat untuk kebutuhan institusi Anda. Mulai dari sesi kelas singkat hingga program mentoring berkelanjutan.",
+      "values": [
+        {
+          "title": "Profesionalisme",
+          "description": "Standar tinggi dalam seleksi praktisi dan pelayanan",
+          "icon": "Shield"
+        },
+        {
+          "title": "Relevansi",
+          "description": "Materi yang sesuai kebutuhan industri dan kurikulum",
+          "icon": "Target"
+        },
+        {
+          "title": "Kolaborasi",
+          "description": "Kemitraan jangka panjang dengan institusi pendidikan",
+          "icon": "Users"
+        },
+        {
+          "title": "Transparansi",
+          "description": "Proses yang jelas dan komunikasi terbuka",
+          "icon": "Eye"
+        }
+      ],
+      "features_title": "Mengapa Memilih Kami?",
+      "features": [
+        "Praktisi dari perusahaan top Indonesia",
+        "Proses seleksi dan kurasi yang ketat",
+        "Koordinasi profesional end-to-end",
+        "Materi dapat disesuaikan dengan kurikulum",
+        "Laporan dan evaluasi pasca-sesi",
+        "Garansi kepuasan atau penggantian praktisi"
+      ]
+    },
+    "services": {
+      "section_title": "Layanan Kami",
+      "title": "Solusi Praktisi Mengajar untuk Institusi Anda",
+      "description": "Pilih layanan yang sesuai dengan kebutuhan institusi pendidikan Anda. Kami siap menghadirkan praktisi terbaik ke ruang kelas.",
+      "items": [
+        {
+          "title": "Guru Tamu",
+          "description": "Praktisi industri hadir langsung ke sekolah untuk berbagi pengalaman nyata dunia kerja kepada siswa.",
+          "icon": "GraduationCap",
+          "features": [
+            "Sesi 1-2 jam",
+            "Materi disesuaikan kurikulum",
+            "Interaktif & inspiratif"
+          ]
+        },
+        {
+          "title": "Dosen Tamu",
+          "description": "Kuliah tamu dari profesional berpengalaman untuk memperkaya wawasan mahasiswa.",
+          "icon": "Users",
+          "features": [
+            "Kuliah umum/khusus",
+            "Studi kasus industri",
+            "Diskusi mendalam"
+          ]
+        },
+        {
+          "title": "Pembicara Seminar",
+          "description": "Keynote speaker dan narasumber untuk acara kampus, workshop, dan konferensi pendidikan.",
+          "icon": "Mic2",
+          "features": [
+            "Event besar/kecil",
+            "Topik trending",
+            "Pengalaman berkesan"
+          ]
+        }
+      ],
+      "benefits": [
+        {
+          "title": "Materi Relevan",
+          "description": "Konten pembelajaran yang sesuai dengan kebutuhan industri terkini",
+          "icon": "BookOpen"
+        },
+        {
+          "title": "Fleksibel",
+          "description": "Jadwal dan durasi dapat disesuaikan dengan agenda institusi Anda",
+          "icon": "Clock"
+        },
+        {
+          "title": "Terverifikasi",
+          "description": "Semua praktisi telah melalui proses kurasi dan verifikasi ketat",
+          "icon": "Award"
+        }
+      ]
+    },
+    "process": {
+      "section_title": "Cara Kerja",
+      "title": "4 Langkah Mudah Menghadirkan Praktisi",
+      "description": "Proses yang sederhana dan transparan untuk memastikan Anda mendapatkan praktisi terbaik untuk institusi Anda.",
+      "steps": [
+        {
+          "number": "01",
+          "title": "Konsultasi Kebutuhan",
+          "description": "Hubungi kami via WhatsApp atau form untuk diskusikan kebutuhan spesifik institusi Anda.",
+          "icon": "MessageSquare"
+        },
+        {
+          "number": "02",
+          "title": "Pencocokan Praktisi",
+          "description": "Tim kami mencarikan praktisi yang paling sesuai dengan topik dan level peserta didik.",
+          "icon": "Search"
+        },
+        {
+          "number": "03",
+          "title": "Konfirmasi & Penjadwalan",
+          "description": "Setelah praktisi dikonfirmasi, atur jadwal sesuai agenda institusi Anda.",
+          "icon": "CalendarCheck"
+        },
+        {
+          "number": "04",
+          "title": "Pelaksanaan Sesi",
+          "description": "Praktisi hadir dan menyampaikan materi yang inspiratif dan aplikatif.",
+          "icon": "Presentation"
+        }
+      ]
+    },
+    "testimonials": {
+      "section_title": "Testimonial",
+      "title": "Apa Kata Mitra Kami?",
+      "description": "Kepuasan institusi pendidikan adalah prioritas kami. Berikut testimoni dari beberapa mitra yang telah bekerja sama.",
+      "items": [
+        {
+          "name": "Dr. Siti Nurhaliza, M.Pd.",
+          "role": "Kepala Sekolah",
+          "institution": "SMAN 1 Jakarta",
+          "quote": "Praktisi yang dihadirkan sangat kompeten dan mampu menyampaikan materi dengan cara yang menarik. Siswa kami sangat antusias dan mendapat wawasan berharga tentang dunia industri.",
+          "rating": 5
+        },
+        {
+          "name": "Prof. Ahmad Dahlan",
+          "role": "Ketua Jurusan Teknik Informatika",
+          "institution": "Universitas Indonesia",
+          "quote": "Kami sudah beberapa kali menggunakan layanan Praktisi Mengajar untuk mata kuliah praktikum. Mahasiswa sangat terbantu dengan insight langsung dari profesional yang berpengalaman.",
+          "rating": 5
+        },
+        {
+          "name": "Drs. Bambang Sutrisno, M.M.",
+          "role": "Kepala Bagian Kemahasiswaan",
+          "institution": "Politeknik Negeri Bandung",
+          "quote": "Proses koordinasi sangat profesional dan praktisi yang hadir sesuai dengan kebutuhan kami. Seminar dies natalis kampus berjalan sukses berkat pembicara yang berkualitas.",
+          "rating": 5
+        }
+      ],
+      "stats": [
+        {
+          "value": "500+",
+          "label": "Sesi Terselenggara"
+        },
+        {
+          "value": "200+",
+          "label": "Praktisi Terverifikasi"
+        },
+        {
+          "value": "150+",
+          "label": "Institusi Mitra"
+        },
+        {
+          "value": "98%",
+          "label": "Tingkat Kepuasan"
+        }
+      ]
+    },
+    "cta": {
+      "section_title": "Mulai Sekarang",
+      "title": "Siap Menghadirkan Praktisi ke Institusi Anda?",
+      "description": "Hubungi kami sekarang untuk konsultasi gratis. Tim kami siap membantu menemukan praktisi yang tepat untuk kebutuhan institusi Anda.",
+      "cta_primary": {
+        "text": "Ajukan Praktisi Mengajar",
+        "link": "#form"
+      },
+      "cta_whatsapp": {
+        "text": "Konsultasi via WhatsApp",
+        "link": "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar"
+      },
+      "contact_info": {
+        "phone": "+62 812-3456-7890",
+        "email": "info@praktisimengajar.id",
+        "address": "Jakarta, Indonesia",
+        "location": "Jakarta, Indonesia"
+      }
+    },
+    "header": {
+      "logo_text": "PM",
+      "title": "Praktisi Mengajar",
+      "nav_links": [
+        {
+          "label": "Layanan",
+          "href": "#layanan"
+        },
+        {
+          "label": "Cara Kerja",
+          "href": "#proses"
+        },
+        {
+          "label": "Testimonial",
+          "href": "#testimonial"
+        },
+        {
+          "label": "Tentang Kami",
+          "href": "#tentang"
+        }
+      ],
+      "cta_buttons": {
+        "secondary": {
+          "text": "Konsultasi",
+          "link": "https://wa.me/6285646420488"
+        },
+        "primary": {
+          "text": "Ajukan Praktisi",
+          "link": "#kontak"
+        }
+      }
+    },
+    "footer": {
+      "description": "Menjembatani industri dan pendidikan untuk masa depan Indonesia yang lebih baik.",
+      "contact_info": {
+        "phone": "+62 812-3456-7890",
+        "email": "info@praktisimengajar.id",
+        "address": "Jakarta, Indonesia"
+      },
+      "quick_links": [
+        {
+          "label": "Layanan",
+          "href": "#layanan"
+        },
+        {
+          "label": "Cara Kerja",
+          "href": "#proses"
+        },
+        {
+          "label": "Testimonial",
+          "href": "#testimonial"
+        },
+        {
+          "label": "Tentang Kami",
+          "href": "#tentang"
+        },
+        {
+          "label": "Hubungi Kami",
+          "href": "#kontak"
+        }
+      ],
+      "services_list": [
+        "Guru Tamu",
+        "Dosen Tamu",
+        "Pembicara Seminar",
+        "Workshop",
+        "Mentoring"
+      ],
+      "whatsapp_cta": {
+        "text": "WhatsApp Kami",
+        "link": "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar"
+      }
+    }
+  },
+  "users": [
+    {
+      "username": "admin",
+      "password": "password123",
+      "name": "Admin",
+      "id": "fcaf"
+    }
+  ]
+}
