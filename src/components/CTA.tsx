@@ -145,7 +145,7 @@ ${formData.deskripsi}`;
             <h3 className="text-2xl font-bold text-foreground mb-6">
               Formulir Pengajuan
             </h3>
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
@@ -154,6 +154,9 @@ ${formData.deskripsi}`;
                   <input
                     type="text"
                     required
+                    name="nama"
+                    value={formData.nama}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
                     placeholder="Nama Anda"
                   />
@@ -165,6 +168,9 @@ ${formData.deskripsi}`;
                   <input
                     type="text"
                     required
+                    name="jabatan"
+                    value={formData.jabatan}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
                     placeholder="Kepala Sekolah / Dosen"
                   />
@@ -178,6 +184,9 @@ ${formData.deskripsi}`;
                 <input
                   type="text"
                   required
+                  name="institusi"
+                  value={formData.institusi}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
                   placeholder="Nama sekolah atau universitas"
                 />
@@ -191,6 +200,9 @@ ${formData.deskripsi}`;
                   <input
                     type="email"
                     required
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
                     placeholder="email@institusi.ac.id"
                   />
@@ -202,6 +214,9 @@ ${formData.deskripsi}`;
                   <input
                     type="tel"
                     required
+                    name="noHp"
+                    value={formData.noHp}
+                    onChange={handleChange}
                     className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
                     placeholder="08xxxxxxxxxx"
                   />
@@ -214,13 +229,16 @@ ${formData.deskripsi}`;
                 </label>
                 <select
                   required
+                  name="layanan"
+                  value={formData.layanan}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
                 >
                   <option value="">Pilih layanan</option>
-                  <option value="guru-tamu">Guru Tamu</option>
-                  <option value="dosen-tamu">Dosen Tamu</option>
-                  <option value="pembicara-seminar">Pembicara Seminar</option>
-                  <option value="lainnya">Lainnya</option>
+                  <option value="Guru Tamu">Guru Tamu</option>
+                  <option value="Dosen Tamu">Dosen Tamu</option>
+                  <option value="Pembicara Seminar">Pembicara Seminar</option>
+                  <option value="Lainnya">Lainnya</option>
                 </select>
               </div>
 
@@ -230,6 +248,9 @@ ${formData.deskripsi}`;
                 </label>
                 <textarea
                   rows={4}
+                  name="deskripsi"
+                  value={formData.deskripsi}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all resize-none"
                   placeholder="Jelaskan topik, jumlah peserta, tanggal yang diinginkan, dll."
                 />
