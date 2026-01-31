@@ -5,18 +5,19 @@ import { useContent } from "../context/ContentContext";
 import { CTASection } from "@/types/content";
 
 interface CTAProps {
-  previewData?: CTASection | null;
+  previewData?: CTASection;
 }
 
 const CTA = ({ previewData }: CTAProps) => {
   const { data } = useContent();
-  const ctaData = (previewData || data?.cta || {}) as Partial<CTASection>;
+  const ctaData = previewData || data?.cta || {} as CTASection;
   
   const whatsappLink = ctaData.cta_whatsapp?.link || "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
   const primaryCta = ctaData.cta_primary || { text: "Ajukan Praktisi Mengajar", link: "#form" };
   const contactInfo = ctaData.contact_info || {
     phone: "+62 856-4642-0488",
     email: "info@praktisimengajar.id",
+    address: "Jakarta, Indonesia",
     location: "Jakarta, Indonesia"
   };
 
