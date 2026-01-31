@@ -11,14 +11,22 @@ import { toast } from "sonner";
 import { iconMap } from "@/lib/iconMap";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Services from "@/components/Services";
+import defaultDb from "@/data/db.json";
 
 const ServicesEditor = () => {
   const { data, updateSection, loading } = useContent();
   const servicesData = data?.services;
+  const defaultServices = defaultDb.content.services;
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
-    defaultValues: servicesData || {},
+    defaultValues: {
+      ...defaultServices,
+      items: defaultServices.items.map(item => ({
+        ...item,
+        featuresString: item.features ? item.features.join("\n") : ""
+      }))
+    },
   });
 
   const watchedValues = useWatch({ control });
@@ -45,10 +53,15 @@ const ServicesEditor = () => {
   };
 
   useEffect(() => {
-    if (servicesData) {
+    const sourceData = servicesData || defaultServices;
+    
+    if (sourceData) {
+      const items = sourceData.items || defaultServices.items || [];
+      
       const formattedData = {
-        ...servicesData,
-        items: servicesData.items.map((item: any) => ({
+        ...defaultServices,
+        ...sourceData,
+        items: items.map((item: any) => ({
           ...item,
           featuresString: item.features ? item.features.join("\n") : ""
         }))
@@ -92,7 +105,7 @@ const ServicesEditor = () => {
                 <DialogContent className="max-w-[100vw] h-[100vh] p-0 border-0 bg-background overflow-y-auto">
                     <DialogTitle className="sr-only">Preview Services</DialogTitle>
                     <div className="pt-10">
-                        <Services />
+                        <Services previewData={getPreviewData()} />
                     </div>
                 </DialogContent>
             </Dialog>
@@ -129,7 +142,7 @@ const ServicesEditor = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Service Items</CardTitle>
-            <Button variant="outline" size="sm" onClick={() => appendItem({ title: "", description: "", icon: "Briefcase", featuresString: "" })}>
+            <Button variant="outline" size="sm" onClick={() => appendItem({ title: "", description: "", icon: "Briefcase", featuresString: "", features: [] })}>
               <Plus className="w-4 h-4 mr-2" />
               Add Service
             </Button>

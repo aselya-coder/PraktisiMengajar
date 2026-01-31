@@ -3,9 +3,13 @@ import { MessageSquare, Search, CalendarCheck, Presentation } from "lucide-react
 import { useContent } from "../context/ContentContext";
 import { iconMap } from "@/lib/iconMap";
 
-const Process = () => {
+interface ProcessProps {
+  previewData?: any;
+}
+
+const Process = ({ previewData }: ProcessProps) => {
   const { data } = useContent();
-  const processData = data?.process || {};
+  const processData = previewData || data?.process || {};
 
   const steps = processData.steps?.map((s: any) => ({
     ...s,

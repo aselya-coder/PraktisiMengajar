@@ -3,9 +3,13 @@ import { Target, Eye, Shield, Users } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 import { iconMap } from "@/lib/iconMap";
 
-const About = () => {
+interface AboutProps {
+  previewData?: any;
+}
+
+const About = ({ previewData }: AboutProps) => {
   const { data } = useContent();
-  const aboutData = data?.about || {};
+  const aboutData = previewData || data?.about || {};
 
   const values = aboutData.values?.map((v: any) => ({
     ...v,

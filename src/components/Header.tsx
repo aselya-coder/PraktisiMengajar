@@ -4,9 +4,13 @@ import { Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
 
-const Header = () => {
+interface HeaderProps {
+  previewData?: any;
+}
+
+const Header = ({ previewData }: HeaderProps) => {
   const { data } = useContent();
-  const headerData = data?.header || {};
+  const headerData = previewData || data?.header || {};
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = headerData.nav_links || [

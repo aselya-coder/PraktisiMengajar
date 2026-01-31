@@ -12,11 +12,16 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/
 import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import defaultDb from "@/data/db.json";
 
 const LayoutEditor = () => {
   const { data, updateSection, loading } = useContent();
   const headerData = data?.header;
   const footerData = data?.footer;
+  
+  const defaultHeader = defaultDb.content.header;
+  const defaultFooter = defaultDb.content.footer;
+
   const [footerPreviewOpen, setFooterPreviewOpen] = useState(false);
   const [headerPreviewOpen, setHeaderPreviewOpen] = useState(false);
 
@@ -28,7 +33,7 @@ const LayoutEditor = () => {
     reset: resetHeader,
     formState: { isDirty: isHeaderDirty } 
   } = useForm({
-    defaultValues: headerData || {},
+    defaultValues: defaultHeader || {},
   });
 
   const { fields: navFields, append: appendNav, remove: removeNav } = useFieldArray({
@@ -46,7 +51,10 @@ const LayoutEditor = () => {
     reset: resetFooter,
     formState: { isDirty: isFooterDirty } 
   } = useForm({
-    defaultValues: footerData || {},
+    defaultValues: {
+      ...defaultFooter,
+      services_list: defaultFooter.services_list.map(s => ({ value: s }))
+    },
   });
 
   const { fields: quickLinkFields, append: appendQuickLink, remove: removeQuickLink } = useFieldArray({
@@ -61,13 +69,36 @@ const LayoutEditor = () => {
 
   const watchedFooterValues = useWatch({ control: controlFooter });
 
+  const getHeaderPreviewData = () => {
+    if (!watchedHeaderValues) return null;
+    return watchedHeaderValues;
+  };
+
+  const getFooterPreviewData = () => {
+    if (!watchedFooterValues) return null;
+    return {
+      ...watchedFooterValues,
+      services_list: Array.isArray(watchedFooterValues.services_list) 
+        ? watchedFooterValues.services_list.map((s: any) => s.value) 
+        : []
+    };
+  };
+
   useEffect(() => {
-    if (headerData) resetHeader(headerData);
-    if (footerData) {
+    const sourceHeader = headerData || defaultHeader;
+    if (sourceHeader) resetHeader({ ...defaultHeader, ...sourceHeader });
+    
+    const sourceFooter = footerData || defaultFooter;
+    if (sourceFooter) {
         // services_list is string array, map to object for field array
+        const servicesList = sourceFooter.services_list || defaultFooter.services_list || [];
+        
         const formattedFooter = {
-            ...footerData,
-            services_list: footerData.services_list.map((s: string) => ({ value: s }))
+            ...defaultFooter,
+            ...sourceFooter,
+            services_list: Array.isArray(servicesList) 
+                ? servicesList.map((s: any) => (typeof s === 'string' ? { value: s } : s))
+                : []
         };
         resetFooter(formattedFooter);
     }
@@ -116,13 +147,10 @@ const LayoutEditor = () => {
                             Preview Header
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-[100vw] h-[50vh] p-0 border-0 bg-background overflow-y-auto">
+                    <DialogContent className="max-w-[100vw] h-[200px] p-0 border-0 bg-transparent overflow-y-visible">
                         <DialogTitle className="sr-only">Preview Header</DialogTitle>
-                        <div className="pt-0 relative h-full bg-muted/20">
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <p className="text-muted-foreground">Content placeholder</p>
-                            </div>
-                            <Header />
+                        <div className="pt-0">
+                            <Header previewData={getHeaderPreviewData()} />
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -215,13 +243,10 @@ const LayoutEditor = () => {
                             Preview Footer
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-[100vw] h-auto p-0 border-0 bg-background overflow-y-auto">
+                    <DialogContent className="max-w-[100vw] h-[600px] p-0 border-0 bg-transparent overflow-y-auto">
                         <DialogTitle className="sr-only">Preview Footer</DialogTitle>
-                        <div className="pt-10">
-                             <div className="h-[200px] bg-muted/20 flex items-center justify-center">
-                                <p className="text-muted-foreground">Content placeholder</p>
-                            </div>
-                            <Footer />
+                        <div className="pt-0">
+                            <Footer previewData={getFooterPreviewData()} />
                         </div>
                     </DialogContent>
                 </Dialog>

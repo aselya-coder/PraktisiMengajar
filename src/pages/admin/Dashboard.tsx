@@ -7,40 +7,76 @@ import {
   Users, 
   FileText,
   ListOrdered,
-  ExternalLink
+  ExternalLink,
+  Database
 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import defaultDb from "@/data/db.json";
 
 const Dashboard = () => {
-  const { data, loading } = useContent();
+  const { data, loading, updateSection } = useContent();
+  const [syncing, setSyncing] = useState(false);
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!data) return <div>No data available</div>;
+  // Use data from context, or fall back to defaultDb directly if context data is empty/incomplete
+  // Merge default data with context data to ensure all sections are present even if DB is partial
+  const displayData = {
+    ...defaultDb.content,
+    ...(data || {})
+  };
+
+  const handleSyncDatabase = async () => {
+    setSyncing(true);
+    try {
+      // Use displayData (which might be defaultDb) to sync to Supabase
+      // If data is empty, we are essentially "seeding" the database with defaultDb
+      const sourceData = displayData;
+      const sections = Object.keys(sourceData);
+      let successCount = 0;
+      
+      for (const section of sections) {
+        // Skip if section data is not an object (sanity check)
+        if (typeof sourceData[section] === 'object') {
+           await updateSection(section, sourceData[section]);
+           successCount++;
+        }
+      }
+      
+      toast.success(`Berhasil sinkronisasi ${successCount} section ke database!`);
+    } catch (error) {
+      console.error("Sync error:", error);
+      toast.error("Gagal sinkronisasi ke database.");
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   const stats = [
     {
       title: "Services",
-      value: data.services?.items?.length || 0,
+      value: (displayData.services?.items?.length || 0),
       icon: Briefcase,
       description: "Active services offered"
     },
     {
       title: "Testimonials",
-      value: data.testimonials?.items?.length || 0,
+      value: (displayData.testimonials?.items?.length || 0),
       icon: MessageSquareQuote,
       description: "Client testimonials"
     },
     {
       title: "Process Steps",
-      value: data.process?.steps?.length || 0,
+      value: (displayData.process?.steps?.length || 0),
       icon: ListOrdered,
       description: "Steps in how it works"
     },
     {
       title: "About Values",
-      value: data.about?.values?.length || 0,
+      value: (displayData.about?.values?.length || 0),
       icon: Users, // Using Users as a placeholder for values/culture
       description: "Core values listed"
     }
@@ -55,12 +91,22 @@ const Dashboard = () => {
             Welcome to the admin dashboard. Here is an overview of your website content.
             </p>
         </div>
-        <Button asChild>
-            <a href="/" target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="w-4 h-4 mr-2" />
-                View Live Site
-            </a>
-        </Button>
+        <div className="flex gap-2">
+            <Button 
+                variant="outline" 
+                onClick={handleSyncDatabase} 
+                disabled={syncing}
+            >
+                <Database className="w-4 h-4 mr-2" />
+                {syncing ? "Syncing..." : "Sync Database"}
+            </Button>
+            <Button asChild>
+                <a href="/" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    View Live Site
+                </a>
+            </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

@@ -10,21 +10,32 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import CTA from "@/components/CTA";
+import defaultDb from "@/data/db.json";
 
 const CTAEditor = () => {
   const { data, updateSection, loading } = useContent();
   const ctaData = data?.cta;
+  const defaultCTA = defaultDb.content.cta;
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
-    defaultValues: ctaData || {},
+    defaultValues: defaultCTA || {},
   });
 
   const watchedValues = useWatch({ control });
 
+  const getPreviewData = () => {
+    if (!watchedValues) return null;
+    return watchedValues;
+  };
+
   useEffect(() => {
-    if (ctaData) {
-      reset(ctaData);
+    const sourceData = ctaData || defaultCTA;
+    if (sourceData) {
+      reset({
+        ...defaultCTA,
+        ...sourceData
+      });
     }
   }, [ctaData, reset]);
 
@@ -54,7 +65,7 @@ const CTAEditor = () => {
                 <DialogContent className="max-w-[100vw] h-screen p-0 border-0 bg-background overflow-y-auto">
                     <DialogTitle className="sr-only">Preview CTA Section</DialogTitle>
                     <div className="pt-20">
-                        <CTA />
+                        <CTA previewData={getPreviewData()} />
                     </div>
                 </DialogContent>
             </Dialog>

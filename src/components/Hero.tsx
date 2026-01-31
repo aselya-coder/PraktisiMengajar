@@ -4,9 +4,13 @@ import { ArrowRight, MessageCircle, CheckCircle } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import { useContent } from "@/context/ContentContext";
 
-const Hero = () => {
+interface HeroProps {
+  previewData?: any;
+}
+
+const Hero = ({ previewData }: HeroProps) => {
   const { data } = useContent();
-  const heroData = data?.hero || {};
+  const heroData = previewData || data?.hero || {};
 
   const badge = heroData.badge || "Mitra Pendidikan Terpercaya";
   const title = heroData.title || (

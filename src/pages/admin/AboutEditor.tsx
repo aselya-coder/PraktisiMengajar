@@ -11,17 +11,32 @@ import { toast } from "sonner";
 import { iconMap } from "@/lib/iconMap";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import About from "@/components/About";
+import defaultDb from "@/data/db.json";
 
 const AboutEditor = () => {
   const { data, updateSection, loading } = useContent();
   const aboutData = data?.about;
+  const defaultAbout = defaultDb.content.about;
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
-    defaultValues: aboutData || {},
+    defaultValues: {
+      ...defaultAbout,
+      features: defaultAbout.features.map(f => ({ value: f })),
+    },
   });
 
   const watchedValues = useWatch({ control });
+
+  const getPreviewData = () => {
+    if (!watchedValues) return null;
+    return {
+      ...watchedValues,
+      features: Array.isArray(watchedValues.features) 
+        ? watchedValues.features.map((f: any) => f.value) 
+        : []
+    };
+  };
 
   const { fields: valueFields, append: appendValue, remove: removeValue } = useFieldArray({
     control,
@@ -34,11 +49,20 @@ const AboutEditor = () => {
   });
 
   useEffect(() => {
-    if (aboutData) {
+    const sourceData = aboutData || defaultAbout;
+    
+    if (sourceData) {
+      const features = sourceData.features || defaultAbout.features || [];
+      const values = sourceData.values || defaultAbout.values || [];
+
       const formattedData = {
-        ...aboutData,
+        ...defaultAbout,
+        ...sourceData,
         // features is string array, map to objects for field array
-        features: aboutData.features.map((f: string) => ({ value: f }))
+        features: Array.isArray(features) 
+          ? features.map((f: any) => (typeof f === 'string' ? { value: f } : f))
+          : [],
+        values: values
       };
       reset(formattedData);
     }
@@ -75,7 +99,7 @@ const AboutEditor = () => {
                 <DialogContent className="max-w-[100vw] h-[100vh] p-0 border-0 bg-background overflow-y-auto">
                     <DialogTitle className="sr-only">Preview About</DialogTitle>
                     <div className="pt-10">
-                        <About />
+                        <About previewData={getPreviewData()} />
                     </div>
                 </DialogContent>
             </Dialog>

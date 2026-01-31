@@ -11,14 +11,16 @@ import { toast } from "sonner";
 import { iconMap } from "@/lib/iconMap";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Process from "@/components/Process";
+import defaultDb from "@/data/db.json";
 
 const ProcessEditor = () => {
   const { data, updateSection, loading } = useContent();
   const processData = data?.process;
+  const defaultProcess = defaultDb.content.process;
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
-    defaultValues: processData || {},
+    defaultValues: defaultProcess || {},
   });
 
   const watchedValues = useWatch({ control });
@@ -34,8 +36,12 @@ const ProcessEditor = () => {
   };
 
   useEffect(() => {
-    if (processData) {
-      reset(processData);
+    const sourceData = processData || defaultProcess;
+    if (sourceData) {
+      reset({
+        ...defaultProcess,
+        ...sourceData
+      });
     }
   }, [processData, reset]);
 
@@ -65,7 +71,7 @@ const ProcessEditor = () => {
                 <DialogContent className="max-w-[100vw] h-[100vh] p-0 border-0 bg-background overflow-y-auto">
                     <DialogTitle className="sr-only">Preview Process</DialogTitle>
                     <div className="pt-10">
-                        <Process />
+                        <Process previewData={getPreviewData()} />
                     </div>
                 </DialogContent>
             </Dialog>

@@ -2,9 +2,13 @@ import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import { useContent } from "@/context/ContentContext";
 
-const Testimonials = () => {
+interface TestimonialsProps {
+  previewData?: any;
+}
+
+const Testimonials = ({ previewData }: TestimonialsProps) => {
   const { data } = useContent();
-  const testimonialsData = data?.testimonials || {};
+  const testimonialsData = previewData || data?.testimonials || {};
 
   const items = testimonialsData.items || [
     {

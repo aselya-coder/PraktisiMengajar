@@ -3,9 +3,13 @@ import { GraduationCap, Users, Mic2, BookOpen, Clock, Award } from "lucide-react
 import { useContent } from "../context/ContentContext";
 import { iconMap } from "@/lib/iconMap";
 
-const Services = () => {
+interface ServicesProps {
+  previewData?: any;
+}
+
+const Services = ({ previewData }: ServicesProps) => {
   const { data } = useContent();
-  const servicesData = data?.services || {};
+  const servicesData = previewData || data?.services || {};
 
   const services = servicesData.items?.map((s: any) => ({
     ...s,

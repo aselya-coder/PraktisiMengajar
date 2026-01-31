@@ -55,21 +55,18 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Also update local storage for offline support/faster subsequent loads
         localStorage.setItem("siteContent", JSON.stringify(contentObject));
       } else {
-        // No data in DB, use fallback
-        console.log("No data in Supabase, using fallback");
+        // No data in DB, use fallback (Expected for fresh install)
+        console.info("Info: Supabase is empty. Loading default content from local file.");
         const fallback = loadFallbackData();
         setData(fallback);
       }
     } catch (error) {
-      console.error("Failed to load content from Supabase", error);
+      console.warn("Notice: Using local content backup (Supabase connection issue or empty).");
       // Fallback on error (e.g., missing env vars or network error)
       const fallback = loadFallbackData();
       setData(fallback);
       
-      // Only show toast if it's not a missing env var issue (which is expected in dev sometimes)
-      if (import.meta.env.VITE_SUPABASE_URL) {
-        toast.error("Failed to load content from server. Using local backup.");
-      }
+      // Silent fail is better for UX if fallback works
     } finally {
       setLoading(false);
     }

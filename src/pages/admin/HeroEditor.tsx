@@ -10,17 +10,32 @@ import { Trash2, Plus, Save, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Hero from "@/components/Hero";
+import defaultDb from "@/data/db.json";
 
 const HeroEditor = () => {
   const { data, updateSection, loading } = useContent();
   const heroData = data?.hero;
+  const defaultHero = defaultDb.content.hero;
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
-    defaultValues: heroData || {},
+    defaultValues: {
+      ...defaultHero,
+      benefits: defaultHero.benefits.map(b => ({ value: b })),
+    },
   });
 
   const watchedValues = useWatch({ control });
+
+  const getPreviewData = () => {
+    if (!watchedValues) return null;
+    return {
+      ...watchedValues,
+      benefits: Array.isArray(watchedValues.benefits) 
+        ? watchedValues.benefits.map((b: any) => b.value) 
+        : []
+    };
+  };
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -34,21 +49,20 @@ const HeroEditor = () => {
 
   // Reset form when data is loaded
   useEffect(() => {
-    if (heroData) {
-      // benefits is array of strings, but useFieldArray expects objects usually or we need to handle it carefully
-      // Actually useFieldArray works with object array better. 
-      // If data.hero.benefits is ["a", "b"], react-hook-form might treat it as [ { value: "a" } ] if we map it, 
-      // or we can just register inputs with index.
-      
-      // Let's check how react-hook-form handles array of strings. 
-      // It's often easier to map ["a"] to [{value: "a"}] for the form and map back on submit.
+    const sourceData = heroData || defaultHero;
+    
+    if (sourceData) {
+      // Handle benefits array (ensure it's mapped to object for useFieldArray)
+      const benefits = sourceData.benefits || defaultHero.benefits || [];
+      const stats = sourceData.stats || defaultHero.stats || [];
       
       const formattedData = {
-        ...heroData,
-        benefits: heroData.benefits.map((b: string) => ({ value: b })),
-        // stats is already an array of objects {value, label}, so it should map automatically correctly
-        // but if it's missing in initial load, we should handle it.
-        stats: heroData.stats || []
+        ...defaultHero, // Ensure all fields have at least default values
+        ...sourceData,  // Override with actual data
+        benefits: Array.isArray(benefits) 
+          ? benefits.map((b: any) => (typeof b === 'string' ? { value: b } : b))
+          : [],
+        stats: stats
       };
       reset(formattedData);
     }
@@ -86,7 +100,7 @@ const HeroEditor = () => {
                 <DialogContent className="max-w-[100vw] h-[100vh] p-0 border-0 bg-background overflow-y-auto">
                     <DialogTitle className="sr-only">Preview Hero</DialogTitle>
                     <div className="pt-10"> {/* Padding for close button */}
-                        <Hero />
+                        <Hero previewData={getPreviewData()} />
                     </div>
                 </DialogContent>
             </Dialog>

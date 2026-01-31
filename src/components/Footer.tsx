@@ -1,9 +1,13 @@
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 
-const Footer = () => {
+interface FooterProps {
+  previewData?: any;
+}
+
+const Footer = ({ previewData }: FooterProps) => {
   const { data } = useContent();
-  const footerData = data?.footer || {};
+  const footerData = previewData || data?.footer || {};
   const currentYear = new Date().getFullYear();
 
   const quickLinks = footerData.quick_links || [

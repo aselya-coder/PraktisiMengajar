@@ -3,9 +3,13 @@ import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 
-const CTA = () => {
+interface CTAProps {
+  previewData?: any;
+}
+
+const CTA = ({ previewData }: CTAProps) => {
   const { data } = useContent();
-  const ctaData = data?.cta || {};
+  const ctaData = previewData || data?.cta || {};
   
   const whatsappLink = ctaData.cta_whatsapp?.link || "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
   const primaryCta = ctaData.cta_primary || { text: "Ajukan Praktisi Mengajar", link: "#form" };

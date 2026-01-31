@@ -10,17 +10,30 @@ import { Trash2, Plus, Save, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Testimonials from "@/components/Testimonials";
+import defaultDb from "@/data/db.json";
 
 const TestimonialsEditor = () => {
   const { data, updateSection, loading } = useContent();
   const testimonialsData = data?.testimonials;
+  const defaultTestimonials = defaultDb.content.testimonials;
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
-    defaultValues: testimonialsData || {},
+    defaultValues: defaultTestimonials || {},
   });
 
   const watchedValues = useWatch({ control });
+
+  const getPreviewData = () => {
+    if (!watchedValues) return null;
+    return {
+      ...watchedValues,
+      items: watchedValues.items?.map((item: any) => ({
+        ...item,
+        rating: Number(item.rating)
+      })) || []
+    };
+  };
 
   const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({
     control,
@@ -33,8 +46,12 @@ const TestimonialsEditor = () => {
   });
 
   useEffect(() => {
-    if (testimonialsData) {
-      reset(testimonialsData);
+    const sourceData = testimonialsData || defaultTestimonials;
+    if (sourceData) {
+      reset({
+        ...defaultTestimonials,
+        ...sourceData
+      });
     }
   }, [testimonialsData, reset]);
 
@@ -73,7 +90,7 @@ const TestimonialsEditor = () => {
                 <DialogContent className="max-w-[100vw] h-[100vh] p-0 border-0 bg-background overflow-y-auto">
                     <DialogTitle className="sr-only">Preview Testimonials</DialogTitle>
                     <div className="pt-10">
-                        <Testimonials />
+                        <Testimonials previewData={getPreviewData()} />
                     </div>
                 </DialogContent>
             </Dialog>
