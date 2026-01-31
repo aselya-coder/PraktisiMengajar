@@ -3,14 +3,15 @@ import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 import { CTASection } from "@/types/content";
+import { useState } from "react";
 
 interface CTAProps {
-  previewData?: CTASection;
+  previewData?: CTASection | null;
 }
 
 const CTA = ({ previewData }: CTAProps) => {
   const { data } = useContent();
-  const ctaData = previewData || data?.cta || {} as CTASection;
+  const ctaData = (previewData || data?.cta || {}) as Partial<CTASection>;
   
   const whatsappLink = ctaData.cta_whatsapp?.link || "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
   const primaryCta = ctaData.cta_primary || { text: "Ajukan Praktisi Mengajar", link: "#form" };
@@ -19,6 +20,48 @@ const CTA = ({ previewData }: CTAProps) => {
     email: "info@praktisimengajar.id",
     address: "Jakarta, Indonesia",
     location: "Jakarta, Indonesia"
+  };
+
+  const [formData, setFormData] = useState({
+    nama: "",
+    jabatan: "",
+    institusi: "",
+    email: "",
+    noHp: "",
+    layanan: "",
+    deskripsi: ""
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validasi field wajib
+    if (!formData.nama || !formData.jabatan || !formData.institusi || !formData.email || !formData.noHp || !formData.layanan) {
+      alert("Mohon lengkapi semua field yang bertanda *");
+      return;
+    }
+
+    const message = `Formulir Pengajuan
+
+Nama Lengkap : ${formData.nama}
+Jabatan : ${formData.jabatan}
+Institusi : ${formData.institusi}
+Email : ${formData.email}
+No. WhatsApp : ${formData.noHp}
+Jenis Layanan : ${formData.layanan}
+
+Deskripsi Kebutuhan:
+${formData.deskripsi}`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappNumber = "6285646420488";
+    
+    window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
   };
 
   return (
