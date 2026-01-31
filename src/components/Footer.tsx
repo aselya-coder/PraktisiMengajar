@@ -1,9 +1,12 @@
 import { Phone, Mail, MapPin } from "lucide-react";
+import { useContent } from "../context/ContentContext";
 
 const Footer = () => {
+  const { data } = useContent();
+  const footerData = data?.footer || {};
   const currentYear = new Date().getFullYear();
 
-  const quickLinks = [
+  const quickLinks = footerData.quick_links || [
     { href: "#layanan", label: "Layanan" },
     { href: "#proses", label: "Cara Kerja" },
     { href: "#testimonial", label: "Testimonial" },
@@ -11,13 +14,24 @@ const Footer = () => {
     { href: "#kontak", label: "Hubungi Kami" },
   ];
 
-  const services = [
+  const services = footerData.services_list || [
     "Guru Tamu",
     "Dosen Tamu",
     "Pembicara Seminar",
     "Workshop",
     "Mentoring",
   ];
+
+  const contactInfo = footerData.contact_info || {
+    phone: "+62 856-4642-0488",
+    email: "info@praktisimengajar.id",
+    address: "Jakarta, Indonesia"
+  };
+
+  const whatsappCta = footerData.whatsapp_cta || {
+    text: "WhatsApp Kami",
+    link: "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar"
+  };
 
   return (
     <footer className="bg-gradient-hero text-primary-foreground">
@@ -32,20 +46,20 @@ const Footer = () => {
               <span className="font-bold text-xl">Praktisi Mengajar</span>
             </div>
             <p className="text-primary-foreground/70 mb-6">
-              Menjembatani industri dan pendidikan untuk masa depan Indonesia yang lebih baik.
+              {footerData.description || "Menjembatani industri dan pendidikan untuk masa depan Indonesia yang lebih baik."}
             </p>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm">
                 <Phone className="w-4 h-4 text-accent" />
-                <span>+62 856-4642-0488</span>
+                <span>{contactInfo.phone}</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <Mail className="w-4 h-4 text-accent" />
-                <span>info@praktisimengajar.id</span>
+                <span>{contactInfo.email}</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <MapPin className="w-4 h-4 text-accent" />
-                <span>Jakarta, Indonesia</span>
+                <span>{contactInfo.address}</span>
               </div>
             </div>
           </div>
@@ -54,7 +68,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-6">Navigasi</h4>
             <ul className="space-y-3">
-              {quickLinks.map((link) => (
+              {quickLinks.map((link: any) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
@@ -71,7 +85,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-6">Layanan</h4>
             <ul className="space-y-3">
-              {services.map((service) => (
+              {services.map((service: string) => (
                 <li key={service}>
                   <span className="text-primary-foreground/70">{service}</span>
                 </li>
@@ -86,13 +100,13 @@ const Footer = () => {
               Tertarik menghadirkan praktisi ke institusi Anda? Konsultasi gratis sekarang!
             </p>
             <a
-              href="https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar"
+              href={whatsappCta.link}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-accent text-accent-foreground font-semibold px-6 py-3 rounded-lg hover:bg-accent/90 transition-colors"
             >
               <Phone className="w-4 h-4" />
-              WhatsApp Kami
+              {whatsappCta.text}
             </a>
           </div>
         </div>

@@ -1,9 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
+import { useContent } from "../context/ContentContext";
 
 const CTA = () => {
-  const whatsappLink = "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
+  const { data } = useContent();
+  const ctaData = data?.cta || {};
+  
+  const whatsappLink = ctaData.cta_whatsapp?.link || "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
+  const primaryCta = ctaData.cta_primary || { text: "Ajukan Praktisi Mengajar", link: "#form" };
+  const contactInfo = ctaData.contact_info || {
+    phone: "+62 856-4642-0488",
+    email: "info@praktisimengajar.id",
+    location: "Jakarta, Indonesia"
+  };
 
   return (
     <section id="kontak" className="py-20 lg:py-28 bg-background">
@@ -17,28 +27,27 @@ const CTA = () => {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block text-accent font-semibold text-sm uppercase tracking-wider mb-4">
-              Mulai Sekarang
+              {ctaData.section_title || "Mulai Sekarang"}
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Siap Menghadirkan Praktisi ke Institusi Anda?
+              {ctaData.title || "Siap Menghadirkan Praktisi ke Institusi Anda?"}
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Hubungi kami sekarang untuk konsultasi gratis. Tim kami siap membantu 
-              menemukan praktisi yang tepat untuk kebutuhan institusi Anda.
+              {ctaData.description || "Hubungi kami sekarang untuk konsultasi gratis. Tim kami siap membantu menemukan praktisi yang tepat untuk kebutuhan institusi Anda."}
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <Button variant="accent" size="xl" asChild>
-                <a href="#form">
-                  Ajukan Praktisi Mengajar
+                <a href={primaryCta.link}>
+                  {primaryCta.text}
                   <ArrowRight className="w-5 h-5" />
                 </a>
               </Button>
               <Button variant="whatsapp" size="xl" asChild>
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="w-5 h-5" />
-                  Konsultasi via WhatsApp
+                  {ctaData.cta_whatsapp?.text || "Konsultasi via WhatsApp"}
                 </a>
               </Button>
             </div>
@@ -51,7 +60,7 @@ const CTA = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Telepon / WhatsApp</p>
-                  <p className="font-medium text-foreground">+62 856-4642-0488</p>
+                  <p className="font-medium text-foreground">{contactInfo.phone}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -60,7 +69,7 @@ const CTA = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium text-foreground">info@praktisimengajar.id</p>
+                  <p className="font-medium text-foreground">{contactInfo.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -69,7 +78,7 @@ const CTA = () => {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Lokasi</p>
-                  <p className="font-medium text-foreground">Jakarta, Indonesia</p>
+                  <p className="font-medium text-foreground">{contactInfo.location}</p>
                 </div>
               </div>
             </div>

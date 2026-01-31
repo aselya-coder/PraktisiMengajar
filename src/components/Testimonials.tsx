@@ -4,9 +4,38 @@ import { useContent } from "@/context/ContentContext";
 
 const Testimonials = () => {
   const { data } = useContent();
-  const testimonialsData = data?.testimonials;
+  const testimonialsData = data?.testimonials || {};
 
-  if (!testimonialsData) return null;
+  const items = testimonialsData.items || [
+    {
+      name: "Dr. Siti Nurhaliza, M.Pd.",
+      role: "Kepala Sekolah",
+      institution: "SMAN 1 Jakarta",
+      quote: "Praktisi yang dihadirkan sangat kompeten dan mampu menyampaikan materi dengan cara yang menarik. Siswa kami sangat antusias dan mendapat wawasan berharga tentang dunia industri.",
+      rating: 5
+    },
+    {
+      name: "Prof. Ahmad Dahlan",
+      role: "Ketua Jurusan Teknik Informatika",
+      institution: "Universitas Indonesia",
+      quote: "Kami sudah beberapa kali menggunakan layanan Praktisi Mengajar untuk mata kuliah praktikum. Mahasiswa sangat terbantu dengan insight langsung dari profesional yang berpengalaman.",
+      rating: 5
+    },
+    {
+      name: "Drs. Bambang Sutrisno, M.M.",
+      role: "Kepala Bagian Kemahasiswaan",
+      institution: "Politeknik Negeri Bandung",
+      quote: "Proses koordinasi sangat profesional dan praktisi yang hadir sesuai dengan kebutuhan kami. Seminar dies natalis kampus berjalan sukses berkat pembicara yang berkualitas.",
+      rating: 5
+    }
+  ];
+
+  const stats = testimonialsData.stats || [
+    { value: "500+", label: "Sesi Terselenggara" },
+    { value: "200+", label: "Praktisi Terverifikasi" },
+    { value: "150+", label: "Institusi Mitra" },
+    { value: "98%", label: "Tingkat Kepuasan" }
+  ];
 
   return (
     <section id="testimonial" className="py-20 lg:py-28 bg-background">
@@ -20,19 +49,19 @@ const Testimonials = () => {
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <span className="inline-block text-accent font-semibold text-sm uppercase tracking-wider mb-4">
-            {testimonialsData.section_title}
+            {testimonialsData.section_title || "Testimonial"}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            {testimonialsData.title}
+            {testimonialsData.title || "Apa Kata Mitra Kami?"}
           </h2>
           <p className="text-lg text-muted-foreground">
-            {testimonialsData.description}
+            {testimonialsData.description || "Kepuasan institusi pendidikan adalah prioritas kami. Berikut testimoni dari beberapa mitra yang telah bekerja sama."}
           </p>
         </motion.div>
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-3 gap-8">
-          {testimonialsData.items.map((testimonial: any, index: number) => (
+          {items.map((testimonial: any, index: number) => (
             <motion.div
               key={testimonial.name}
               initial={{ opacity: 0, y: 30 }}
@@ -71,32 +100,30 @@ const Testimonials = () => {
         </div>
 
         {/* Stats */}
-        {testimonialsData.stats && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-16 bg-gradient-hero rounded-2xl p-8 lg:p-12"
-          >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              {testimonialsData.stats.map((stat: any, index: number) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                >
-                  <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-primary-foreground/70">{stat.label}</div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 bg-gradient-hero rounded-2xl p-8 lg:p-12"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {stats.map((stat: any, index: number) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+              >
+                <div className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-primary-foreground/70">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

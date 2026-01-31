@@ -2,18 +2,23 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useContent } from "@/context/ContentContext";
 
 const Header = () => {
+  const { data } = useContent();
+  const headerData = data?.header || {};
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navLinks = [
+  const navLinks = headerData.nav_links || [
     { href: "#layanan", label: "Layanan" },
     { href: "#proses", label: "Cara Kerja" },
     { href: "#testimonial", label: "Testimonial" },
     { href: "#tentang", label: "Tentang Kami" },
   ];
 
-  const whatsappLink = "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
+  const whatsappLink = headerData.cta_buttons?.secondary?.link || "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
+  const primaryCta = headerData.cta_buttons?.primary || { text: "Ajukan Praktisi", link: "#kontak" };
+  const secondaryCta = headerData.cta_buttons?.secondary || { text: "Konsultasi", link: whatsappLink };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-b border-border">
@@ -22,16 +27,16 @@ const Header = () => {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
             <div className="w-10 h-10 bg-gradient-hero rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">PM</span>
+              <span className="text-primary-foreground font-bold text-lg">{headerData.logo_text || "PM"}</span>
             </div>
             <span className="font-bold text-lg text-foreground hidden sm:block">
-              Praktisi Mengajar
+              {headerData.title || "Praktisi Mengajar"}
             </span>
           </a>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link: any) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -45,13 +50,13 @@ const Header = () => {
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <Button variant="outline" size="sm" asChild>
-              <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+              <a href={secondaryCta.link} target="_blank" rel="noopener noreferrer">
                 <Phone className="w-4 h-4" />
-                Konsultasi
+                {secondaryCta.text}
               </a>
             </Button>
             <Button variant="default" size="sm" asChild>
-              <a href="#kontak">Ajukan Praktisi</a>
+              <a href={primaryCta.link}>{primaryCta.text}</a>
             </Button>
           </div>
 
@@ -87,13 +92,13 @@ const Header = () => {
                 ))}
                 <div className="flex flex-col gap-3 pt-4 border-t border-border">
                   <Button variant="whatsapp" size="lg" asChild>
-                    <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                    <a href={secondaryCta.link} target="_blank" rel="noopener noreferrer">
                       <Phone className="w-4 h-4" />
-                      Konsultasi via WhatsApp
+                      {secondaryCta.text}
                     </a>
                   </Button>
                   <Button variant="default" size="lg" asChild>
-                    <a href="#kontak">Ajukan Praktisi Mengajar</a>
+                    <a href={primaryCta.link}>{primaryCta.text}</a>
                   </Button>
                 </div>
               </nav>

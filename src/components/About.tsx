@@ -1,8 +1,16 @@
 import { motion } from "framer-motion";
 import { Target, Eye, Shield, Users } from "lucide-react";
+import { useContent } from "../context/ContentContext";
+import { iconMap } from "@/lib/iconMap";
 
 const About = () => {
-  const values = [
+  const { data } = useContent();
+  const aboutData = data?.about || {};
+
+  const values = aboutData.values?.map((v: any) => ({
+    ...v,
+    icon: iconMap[v.icon] || Shield
+  })) || [
     {
       icon: Shield,
       title: "Profesionalisme",
@@ -25,6 +33,15 @@ const About = () => {
     },
   ];
 
+  const features = aboutData.features || [
+    "Praktisi dari perusahaan top Indonesia",
+    "Proses seleksi dan kurasi yang ketat",
+    "Koordinasi profesional end-to-end",
+    "Materi dapat disesuaikan dengan kurikulum",
+    "Laporan dan evaluasi pasca-sesi",
+    "Garansi kepuasan atau penggantian praktisi"
+  ];
+
   return (
     <section id="tentang" className="py-20 lg:py-28 bg-muted/50">
       <div className="container mx-auto px-4">
@@ -37,25 +54,21 @@ const About = () => {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block text-accent font-semibold text-sm uppercase tracking-wider mb-4">
-              Tentang Kami
+              {aboutData.section_title || "Tentang Kami"}
             </span>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Menjembatani Industri dan Pendidikan
+              {aboutData.title || "Menjembatani Industri dan Pendidikan"}
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
-              Praktisi Mengajar adalah platform yang menghubungkan profesional industri 
-              dengan institusi pendidikan di Indonesia. Kami berkomitmen untuk memperkaya 
-              pengalaman belajar peserta didik dengan wawasan langsung dari dunia kerja.
+              {aboutData.description || "Praktisi Mengajar adalah platform yang menghubungkan profesional industri dengan institusi pendidikan di Indonesia. Kami berkomitmen untuk memperkaya pengalaman belajar peserta didik dengan wawasan langsung dari dunia kerja."}
             </p>
             <p className="text-muted-foreground mb-8">
-              Dengan jaringan lebih dari 200 praktisi terverifikasi dari berbagai bidang industri, 
-              kami siap menghadirkan narasumber yang tepat untuk kebutuhan institusi Anda. 
-              Mulai dari sesi kelas singkat hingga program mentoring berkelanjutan.
+              {aboutData.sub_description || "Dengan jaringan lebih dari 200 praktisi terverifikasi dari berbagai bidang industri, kami siap menghadirkan narasumber yang tepat untuk kebutuhan institusi Anda. Mulai dari sesi kelas singkat hingga program mentoring berkelanjutan."}
             </p>
 
             {/* Values Grid */}
             <div className="grid sm:grid-cols-2 gap-6">
-              {values.map((value, index) => (
+              {values.map((value: any, index: number) => (
                 <motion.div
                   key={value.title}
                   initial={{ opacity: 0, y: 20 }}
@@ -85,16 +98,9 @@ const About = () => {
             className="relative"
           >
             <div className="bg-gradient-hero rounded-2xl p-8 lg:p-12 text-primary-foreground">
-              <h3 className="text-2xl font-bold mb-6">Mengapa Memilih Kami?</h3>
+              <h3 className="text-2xl font-bold mb-6">{aboutData.features_title || "Mengapa Memilih Kami?"}</h3>
               <ul className="space-y-4">
-                {[
-                  "Praktisi dari perusahaan top Indonesia",
-                  "Proses seleksi dan kurasi yang ketat",
-                  "Koordinasi profesional end-to-end",
-                  "Materi dapat disesuaikan dengan kurikulum",
-                  "Laporan dan evaluasi pasca-sesi",
-                  "Garansi kepuasan atau penggantian praktisi",
-                ].map((item, index) => (
+                {features.map((item: string, index: number) => (
                   <motion.li
                     key={item}
                     initial={{ opacity: 0, x: 10 }}

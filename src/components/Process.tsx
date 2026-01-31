@@ -1,8 +1,16 @@
 import { motion } from "framer-motion";
 import { MessageSquare, Search, CalendarCheck, Presentation } from "lucide-react";
+import { useContent } from "../context/ContentContext";
+import { iconMap } from "@/lib/iconMap";
 
 const Process = () => {
-  const steps = [
+  const { data } = useContent();
+  const processData = data?.process || {};
+
+  const steps = processData.steps?.map((s: any) => ({
+    ...s,
+    icon: iconMap[s.icon] || MessageSquare
+  })) || [
     {
       number: "01",
       icon: MessageSquare,
@@ -41,14 +49,13 @@ const Process = () => {
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <span className="inline-block text-accent font-semibold text-sm uppercase tracking-wider mb-4">
-            Cara Kerja
+            {processData.section_title || "Cara Kerja"}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            4 Langkah Mudah Menghadirkan Praktisi
+            {processData.title || "4 Langkah Mudah Menghadirkan Praktisi"}
           </h2>
           <p className="text-lg text-muted-foreground">
-            Proses yang sederhana dan transparan untuk memastikan Anda mendapatkan 
-            praktisi terbaik untuk institusi Anda.
+            {processData.description || "Proses yang sederhana dan transparan untuk memastikan Anda mendapatkan praktisi terbaik untuk institusi Anda."}
           </p>
         </motion.div>
 

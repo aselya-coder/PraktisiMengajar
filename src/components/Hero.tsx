@@ -2,22 +2,44 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, CheckCircle } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
+import { useContent } from "@/context/ContentContext";
 
 const Hero = () => {
-  const whatsappLink = "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar";
+  const { data } = useContent();
+  const heroData = data?.hero || {};
 
-  const benefits = [
+  const badge = heroData.badge || "Mitra Pendidikan Terpercaya";
+  const title = heroData.title || (
+    <>
+      Hadirkan{" "}
+      <span className="text-gradient">Praktisi Industri</span>{" "}
+      ke Ruang Kelas Anda
+    </>
+  );
+  const subtitle = heroData.subtitle || "Layanan Guru Tamu, Dosen Tamu, dan Pembicara Seminar profesional untuk sekolah dan perguruan tinggi di seluruh Indonesia.";
+  
+  const benefits = heroData.benefits || [
     "Praktisi industri berpengalaman",
     "Materi relevan & aplikatif",
     "Fleksibel sesuai kurikulum",
   ];
+
+  const ctaPrimary = heroData.cta_primary || { text: "Ajukan Praktisi Mengajar", link: "#kontak" };
+  const ctaSecondary = heroData.cta_secondary || { text: "Konsultasi Gratis", link: "https://wa.me/6285646420488?text=Halo,%20saya%20tertarik%20dengan%20layanan%20Praktisi%20Mengajar" };
+
+  const stats = heroData.stats || [
+    { value: "98%", label: "Tingkat Kepuasan" },
+    { value: "200+", label: "Praktisi Terverifikasi" }
+  ];
+
+  const bgImage = heroData.image || heroImage;
 
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img
-          src={heroImage}
+          src={bgImage}
           alt="Praktisi mengajar di universitas"
           className="w-full h-full object-cover"
         />
@@ -43,26 +65,29 @@ const Hero = () => {
             >
               <span className="w-2 h-2 bg-accent rounded-full animate-pulse" />
               <span className="text-sm font-medium text-primary-foreground/90">
-                Mitra Pendidikan Terpercaya
+                {badge}
               </span>
             </motion.div>
 
             {/* Headline */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-              Hadirkan{" "}
-              <span className="text-gradient">Praktisi Industri</span>{" "}
-              ke Ruang Kelas Anda
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 whitespace-pre-line">
+              {heroData.title ? heroData.title : (
+                <>
+                Hadirkan{" "}
+                <span className="text-gradient">Praktisi Industri</span>{" "}
+                ke Ruang Kelas Anda
+                </>
+              )}
             </h1>
 
             {/* Subheadline */}
             <p className="text-lg md:text-xl text-primary-foreground/80 mb-8 max-w-xl">
-              Layanan Guru Tamu, Dosen Tamu, dan Pembicara Seminar profesional 
-              untuk sekolah dan perguruan tinggi di seluruh Indonesia.
+              {subtitle}
             </p>
 
             {/* Benefits */}
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              {benefits.map((benefit, index) => (
+              {benefits.map((benefit: string, index: number) => (
                 <motion.div
                   key={benefit}
                   initial={{ opacity: 0, y: 10 }}
@@ -84,15 +109,15 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-4"
             >
               <Button variant="hero" size="xl" asChild>
-                <a href="#kontak">
-                  Ajukan Praktisi Mengajar
+                <a href={ctaPrimary.link}>
+                  {ctaPrimary.text}
                   <ArrowRight className="w-5 h-5" />
                 </a>
               </Button>
               <Button variant="heroOutline" size="xl" asChild>
-                <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                <a href={ctaSecondary.link} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="w-5 h-5" />
-                  Konsultasi Gratis
+                  {ctaSecondary.text}
                 </a>
               </Button>
             </motion.div>
@@ -126,14 +151,18 @@ const Hero = () => {
           >
             {/* Floating Stats Cards */}
             <div className="relative">
-              <div className="absolute top-10 right-0 bg-card/95 backdrop-blur-md rounded-xl p-6 shadow-elevated">
-                <div className="text-3xl font-bold text-primary">98%</div>
-                <div className="text-sm text-muted-foreground">Tingkat Kepuasan</div>
-              </div>
-              <div className="absolute bottom-20 left-10 bg-card/95 backdrop-blur-md rounded-xl p-6 shadow-elevated">
-                <div className="text-3xl font-bold text-accent">200+</div>
-                <div className="text-sm text-muted-foreground">Praktisi Terverifikasi</div>
-              </div>
+              {stats.length > 0 && (
+                 <div className="absolute top-10 right-0 bg-card/95 backdrop-blur-md rounded-xl p-6 shadow-elevated">
+                   <div className="text-3xl font-bold text-primary">{stats[0]?.value}</div>
+                   <div className="text-sm text-muted-foreground">{stats[0]?.label}</div>
+                 </div>
+              )}
+              {stats.length > 1 && (
+                 <div className="absolute bottom-20 left-10 bg-card/95 backdrop-blur-md rounded-xl p-6 shadow-elevated">
+                   <div className="text-3xl font-bold text-accent">{stats[1]?.value}</div>
+                   <div className="text-sm text-muted-foreground">{stats[1]?.label}</div>
+                 </div>
+              )}
             </div>
           </motion.div>
         </div>

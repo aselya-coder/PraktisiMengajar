@@ -1,8 +1,16 @@
 import { motion } from "framer-motion";
 import { GraduationCap, Users, Mic2, BookOpen, Clock, Award } from "lucide-react";
+import { useContent } from "../context/ContentContext";
+import { iconMap } from "@/lib/iconMap";
 
 const Services = () => {
-  const services = [
+  const { data } = useContent();
+  const servicesData = data?.services || {};
+
+  const services = servicesData.items?.map((s: any) => ({
+    ...s,
+    icon: iconMap[s.icon] || GraduationCap
+  })) || [
     {
       icon: GraduationCap,
       title: "Guru Tamu",
@@ -23,7 +31,10 @@ const Services = () => {
     },
   ];
 
-  const benefits = [
+  const benefits = servicesData.benefits?.map((b: any) => ({
+    ...b,
+    icon: iconMap[b.icon] || BookOpen
+  })) || [
     {
       icon: BookOpen,
       title: "Materi Relevan",
@@ -53,20 +64,19 @@ const Services = () => {
           className="text-center max-w-3xl mx-auto mb-16"
         >
           <span className="inline-block text-accent font-semibold text-sm uppercase tracking-wider mb-4">
-            Layanan Kami
+            {servicesData.section_title || "Layanan Kami"}
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Solusi Praktisi Mengajar untuk Institusi Anda
+            {servicesData.title || "Solusi Praktisi Mengajar untuk Institusi Anda"}
           </h2>
           <p className="text-lg text-muted-foreground">
-            Pilih layanan yang sesuai dengan kebutuhan institusi pendidikan Anda. 
-            Kami siap menghadirkan praktisi terbaik ke ruang kelas.
+            {servicesData.description || "Pilih layanan yang sesuai dengan kebutuhan institusi pendidikan Anda. Kami siap menghadirkan praktisi terbaik ke ruang kelas."}
           </p>
         </motion.div>
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {services.map((service, index) => (
+          {services.map((service: any, index: number) => (
             <motion.div
               key={service.title}
               initial={{ opacity: 0, y: 30 }}
@@ -90,7 +100,7 @@ const Services = () => {
 
               {/* Features */}
               <ul className="space-y-2">
-                {service.features.map((feature) => (
+                {service.features.map((feature: string) => (
                   <li key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span className="w-1.5 h-1.5 bg-accent rounded-full" />
                     {feature}
@@ -110,7 +120,7 @@ const Services = () => {
           className="bg-muted rounded-2xl p-8 lg:p-12"
         >
           <div className="grid md:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => (
+            {benefits.map((benefit: any, index: number) => (
               <motion.div
                 key={benefit.title}
                 initial={{ opacity: 0, x: -20 }}

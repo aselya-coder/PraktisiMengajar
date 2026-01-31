@@ -4,6 +4,35 @@
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
 
+## Deployment & Setup
+
+### 1. Environment Variables
+This project uses Supabase for authentication and data storage. You need to configure the environment variables.
+
+1. Rename `.env.example` to `.env` (or create a new `.env` file).
+2. Fill in the following variables:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_project_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_API_URL= # Optional: Leave empty for production/Vercel
+   ```
+
+### 2. Database Setup (Supabase)
+1. Create a new project on [Supabase](https://supabase.com).
+2. Go to the SQL Editor in Supabase dashboard.
+3. Run the SQL commands from `supabase_schema.sql` (included in this repo).
+4. Create an Admin User:
+   - Go to Authentication > Users.
+   - Click "Add User" -> "Create New User".
+   - Enter email and password.
+   - Use these credentials to login at `/admin`.
+
+### 3. Deploy to Vercel
+1. Push this code to GitHub/GitLab/Bitbucket.
+2. Import the project in Vercel.
+3. Add the Environment Variables (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) in Vercel Project Settings.
+4. Deploy!
+
 ## How can I edit this code?
 
 There are several ways of editing your application.

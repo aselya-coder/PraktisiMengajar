@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getContent, saveContent } from "@/services/api";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
+import defaultData from "@/data/db.json";
 
 interface ContentContextType {
   data: any;
   loading: boolean;
   updateSection: (section: string, newData: any) => Promise<void>;
-  refresh: () => Promise<void>;
+  refresh: () => void;
 }
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
@@ -15,20 +16,59 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
+  // Fallback to local storage or db.json if database is empty or connection fails
+  const loadFallbackData = () => {
     try {
-      setLoading(true);
-      const content = await getContent();
-      setData(content);
+      // First try local storage
+      const storedData = localStorage.getItem("siteContent");
+      if (storedData) {
+        return JSON.parse(storedData);
+      }
+      // Then default data
+      return defaultData.content || defaultData;
+    } catch (e) {
+      console.error("Error loading fallback data", e);
+      return defaultData.content || defaultData;
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      // Fetch all sections from Supabase
+      const { data: sections, error } = await supabase
+        .from("sections")
+        .select("*");
+
+      if (error) {
+        throw error;
+      }
+
+      if (sections && sections.length > 0) {
+        // Transform array [{key: 'hero', data: {...}}, ...] to object {hero: {...}, ...}
+        const contentObject: Record<string, any> = {};
+        sections.forEach((row: any) => {
+          contentObject[row.key] = row.data;
+        });
+        
+        setData(contentObject);
+        // Also update local storage for offline support/faster subsequent loads
+        localStorage.setItem("siteContent", JSON.stringify(contentObject));
+      } else {
+        // No data in DB, use fallback
+        console.log("No data in Supabase, using fallback");
+        const fallback = loadFallbackData();
+        setData(fallback);
+      }
     } catch (error) {
-      console.error("Failed to load content", error);
-      // Fallback to local import if API fails
-      try {
-        const localData = await import("../data/db.json");
-        // Check if localData has .content (new structure) or is the content itself
-        setData(localData.default.content || localData.default);
-      } catch (e) {
-        console.error("Critical error loading content fallback", e);
+      console.error("Failed to load content from Supabase", error);
+      // Fallback on error (e.g., missing env vars or network error)
+      const fallback = loadFallbackData();
+      setData(fallback);
+      
+      // Only show toast if it's not a missing env var issue (which is expected in dev sometimes)
+      if (import.meta.env.VITE_SUPABASE_URL) {
+        toast.error("Failed to load content from server. Using local backup.");
       }
     } finally {
       setLoading(false);
@@ -41,18 +81,34 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateSection = async (section: string, newData: any) => {
     try {
-      // Optimistic update
-      setData((prev: any) => ({
-        ...prev,
-        [section]: newData
-      }));
+      // 1. Optimistic Update (Update UI immediately)
+      setData((prev: any) => {
+        const updatedContent = {
+          ...prev,
+          [section]: newData
+        };
+        return updatedContent;
+      });
 
-      await saveContent(section, newData);
+      // 2. Update Supabase
+      const { error } = await supabase
+        .from("sections")
+        .upsert({ key: section, data: newData }, { onConflict: "key" });
+
+      if (error) throw error;
+
+      // 3. Update Local Storage Backup
+      const currentData = loadFallbackData();
+      const updatedLocal = { ...currentData, [section]: newData };
+      localStorage.setItem("siteContent", JSON.stringify(updatedLocal));
+
       toast.success(`${section} updated successfully`);
-    } catch (error) {
-      toast.error(`Failed to update ${section}`);
-      // Revert or fetch again
-      fetchData();
+    } catch (error: any) {
+      console.error(`Failed to update ${section}`, error);
+      toast.error(`Failed to save to database: ${error.message}`);
+      
+      // Revert state if needed (optional, but good practice)
+      fetchData(); 
     }
   };
 

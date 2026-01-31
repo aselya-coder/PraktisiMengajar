@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Lock } from "lucide-react";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -18,12 +18,12 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const success = await login(username, password);
+      const success = await login(email, password);
       if (success) {
         toast.success("Login berhasil");
         navigate("/admin");
       } else {
-        toast.error("Username atau password salah");
+        toast.error("Email atau password salah");
       }
     } catch (error) {
       toast.error("Terjadi kesalahan saat login");
@@ -45,13 +45,13 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
-              id="username"
-              type="text"
-              placeholder="Masukkan username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              type="email"
+              placeholder="nama@contoh.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
