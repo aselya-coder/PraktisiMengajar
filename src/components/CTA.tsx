@@ -42,26 +42,26 @@ const CTA = ({ previewData }: CTAProps) => {
 
     // Validasi field wajib
     if (!formData.nama || !formData.jabatan || !formData.institusi || !formData.email || !formData.noHp || !formData.layanan) {
-      alert("Mohon lengkapi semua field yang bertanda *");
+      alert("Mohon lengkapi semua data wajib");
       return;
     }
 
     const message = `Formulir Pengajuan
 
-Nama Lengkap : ${formData.nama}
-Jabatan : ${formData.jabatan}
-Institusi : ${formData.institusi}
-Email : ${formData.email}
-No. WhatsApp : ${formData.noHp}
-Jenis Layanan : ${formData.layanan}
+      Nama Lengkap : ${formData.nama}
+      Jabatan : ${formData.jabatan}
+      Institusi : ${formData.institusi}
+      Email : ${formData.email}
+      No. WhatsApp : ${formData.noHp}
+      Jenis Layanan : ${formData.layanan}
 
-Deskripsi Kebutuhan:
-${formData.deskripsi}`;
+      Deskripsi Kebutuhan:
+      ${formData.deskripsi}`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappNumber = "6285646420488";
     
-    window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, "_blank");
   };
 
   return (
