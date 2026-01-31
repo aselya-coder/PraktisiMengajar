@@ -1,13 +1,14 @@
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useContent } from "../context/ContentContext";
+import { FooterSection } from "@/types/content";
 
 interface FooterProps {
-  previewData?: any;
+  previewData?: FooterSection;
 }
 
 const Footer = ({ previewData }: FooterProps) => {
   const { data } = useContent();
-  const footerData = previewData || data?.footer || {};
+  const footerData = previewData || data?.footer || {} as FooterSection;
   const currentYear = new Date().getFullYear();
 
   const quickLinks = footerData.quick_links || [
@@ -72,7 +73,7 @@ const Footer = ({ previewData }: FooterProps) => {
           <div>
             <h4 className="font-semibold text-lg mb-6">Navigasi</h4>
             <ul className="space-y-3">
-              {quickLinks.map((link: any) => (
+              {quickLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}

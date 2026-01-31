@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import { useContent } from "@/context/ContentContext";
+import { TestimonialsSection } from "@/types/content";
 
 interface TestimonialsProps {
-  previewData?: any;
+  previewData?: TestimonialsSection;
 }
 
 const Testimonials = ({ previewData }: TestimonialsProps) => {
   const { data } = useContent();
-  const testimonialsData = previewData || data?.testimonials || {};
+  const testimonialsData = previewData || data?.testimonials || {} as TestimonialsSection;
 
   const items = testimonialsData.items || [
     {
@@ -65,7 +66,7 @@ const Testimonials = ({ previewData }: TestimonialsProps) => {
 
         {/* Testimonials Grid */}
         <div className="grid md:grid-cols-3 gap-8">
-          {items.map((testimonial: any, index: number) => (
+          {items.map((testimonial, index: number) => (
             <motion.div
               key={testimonial.name}
               initial={{ opacity: 0, y: 30 }}
@@ -112,7 +113,7 @@ const Testimonials = ({ previewData }: TestimonialsProps) => {
           className="mt-16 bg-gradient-hero rounded-2xl p-8 lg:p-12"
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {stats.map((stat: any, index: number) => (
+            {stats.map((stat, index: number) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, scale: 0.9 }}

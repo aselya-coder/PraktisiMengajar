@@ -11,6 +11,11 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Hero from "@/components/Hero";
 import defaultDb from "@/data/db.json";
+import { HeroSection } from "@/types/content";
+
+interface HeroFormValues extends Omit<HeroSection, 'benefits'> {
+  benefits: { value: string }[];
+}
 
 const HeroEditor = () => {
   const { data, updateSection, loading } = useContent();
@@ -18,7 +23,7 @@ const HeroEditor = () => {
   const defaultHero = defaultDb.content.hero;
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
+  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm<HeroFormValues>({
     defaultValues: {
       ...defaultHero,
       benefits: defaultHero.benefits.map(b => ({ value: b })),
@@ -32,9 +37,9 @@ const HeroEditor = () => {
     return {
       ...watchedValues,
       benefits: Array.isArray(watchedValues.benefits) 
-        ? watchedValues.benefits.map((b: any) => b.value) 
+        ? watchedValues.benefits.map((b) => b?.value || "") 
         : []
-    };
+    } as unknown as HeroSection;
   };
 
   const { fields, append, remove } = useFieldArray({
@@ -60,21 +65,21 @@ const HeroEditor = () => {
         ...defaultHero, // Ensure all fields have at least default values
         ...sourceData,  // Override with actual data
         benefits: Array.isArray(benefits) 
-          ? benefits.map((b: any) => (typeof b === 'string' ? { value: b } : b))
+          ? benefits.map((b: string | { value: string }) => (typeof b === 'string' ? { value: b } : b))
           : [],
         stats: stats
       };
       reset(formattedData);
     }
-  }, [heroData, reset]);
+  }, [heroData, reset, defaultHero]);
 
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: HeroFormValues) => {
     try {
       // Map benefits back to string array
-      const cleanData = {
+      const cleanData: HeroSection = {
         ...formData,
-        benefits: formData.benefits.map((b: any) => b.value)
-      };
+        benefits: formData.benefits.map((b) => b.value)
+      } as unknown as HeroSection;
       
       await updateSection("hero", cleanData);
     } catch (error) {

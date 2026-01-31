@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContent } from "@/context/ContentContext";
+import { HeaderSection } from "@/types/content";
 
 interface HeaderProps {
-  previewData?: any;
+  previewData?: HeaderSection;
 }
 
 const Header = ({ previewData }: HeaderProps) => {
   const { data } = useContent();
-  const headerData = previewData || data?.header || {};
+  const headerData = previewData || data?.header || {} as HeaderSection;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = headerData.nav_links || [
@@ -40,7 +41,7 @@ const Header = ({ previewData }: HeaderProps) => {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link: any) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}

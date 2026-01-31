@@ -19,7 +19,7 @@ export const getContent = async () => {
   }
 };
 
-export const saveContent = async (section: string, data: any) => {
+export const saveContent = async <T>(section: string, data: T) => {
   try {
     // Patch the specific key within the content object
     const response = await api.patch("/content", { [section]: data });

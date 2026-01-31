@@ -2,22 +2,23 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import defaultData from "@/data/db.json";
+import { SiteContent } from "@/types/content";
 
 interface ContentContextType {
-  data: any;
+  data: SiteContent | null;
   loading: boolean;
-  updateSection: (section: string, newData: any) => Promise<void>;
+  updateSection: <K extends keyof SiteContent>(section: K, newData: SiteContent[K]) => Promise<void>;
   refresh: () => void;
 }
 
 const ContentContext = createContext<ContentContextType | undefined>(undefined);
 
 export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<SiteContent | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Fallback to local storage or db.json if database is empty or connection fails
-  const loadFallbackData = () => {
+  const loadFallbackData = (): SiteContent => {
     try {
       // First try local storage
       const storedData = localStorage.getItem("siteContent");
@@ -25,10 +26,10 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return JSON.parse(storedData);
       }
       // Then default data
-      return defaultData.content || defaultData;
+      return (defaultData.content || defaultData) as unknown as SiteContent;
     } catch (e) {
       console.error("Error loading fallback data", e);
-      return defaultData.content || defaultData;
+      return (defaultData.content || defaultData) as unknown as SiteContent;
     }
   };
 
@@ -46,12 +47,12 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (sections && sections.length > 0) {
         // Transform array [{key: 'hero', data: {...}}, ...] to object {hero: {...}, ...}
-        const contentObject: Record<string, any> = {};
-        sections.forEach((row: any) => {
+        const contentObject: Partial<SiteContent> = {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sections.forEach((row: { key: keyof SiteContent; data: any }) => {
           contentObject[row.key] = row.data;
-        });
-        
-        setData(contentObject);
+        });       
+        setData(contentObject as SiteContent);
         // Also update local storage for offline support/faster subsequent loads
         localStorage.setItem("siteContent", JSON.stringify(contentObject));
       } else {
@@ -74,12 +75,14 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const updateSection = async (section: string, newData: any) => {
+  const updateSection = async <K extends keyof SiteContent>(section: K, newData: SiteContent[K]) => {
     try {
       // 1. Optimistic Update (Update UI immediately)
-      setData((prev: any) => {
+      setData((prev) => {
+        if (!prev) return prev;
         const updatedContent = {
           ...prev,
           [section]: newData
@@ -100,9 +103,10 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       localStorage.setItem("siteContent", JSON.stringify(updatedLocal));
 
       toast.success(`${section} updated successfully`);
-    } catch (error: any) {
+    } catch (error) {
       console.error(`Failed to update ${section}`, error);
-      toast.error(`Failed to save to database: ${error.message}`);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error(`Failed to save to database: ${message}`);
       
       // Revert state if needed (optional, but good practice)
       fetchData(); 
@@ -116,6 +120,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useContent = () => {
   const context = useContext(ContentContext);
   if (context === undefined) {

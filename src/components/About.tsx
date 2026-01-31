@@ -2,16 +2,17 @@ import { motion } from "framer-motion";
 import { Target, Eye, Shield, Users } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 import { iconMap } from "@/lib/iconMap";
+import { AboutSection } from "@/types/content";
 
 interface AboutProps {
-  previewData?: any;
+  previewData?: AboutSection;
 }
 
 const About = ({ previewData }: AboutProps) => {
   const { data } = useContent();
-  const aboutData = previewData || data?.about || {};
+  const aboutData = previewData || data?.about || {} as AboutSection;
 
-  const values = aboutData.values?.map((v: any) => ({
+  const values = aboutData.values?.map((v) => ({
     ...v,
     icon: iconMap[v.icon] || Shield
   })) || [
@@ -69,12 +70,12 @@ const About = ({ previewData }: AboutProps) => {
             <p className="text-muted-foreground mb-8">
               {aboutData.sub_description || "Dengan jaringan lebih dari 200 praktisi terverifikasi dari berbagai bidang industri, kami siap menghadirkan narasumber yang tepat untuk kebutuhan institusi Anda. Mulai dari sesi kelas singkat hingga program mentoring berkelanjutan."}
             </p>
-
+            
             {/* Values Grid */}
             <div className="grid sm:grid-cols-2 gap-6">
-              {values.map((value: any, index: number) => (
+              {values.map((value, index: number) => (
                 <motion.div
-                  key={value.title}
+                  key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}

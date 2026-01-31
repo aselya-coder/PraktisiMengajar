@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import CTA from "@/components/CTA";
 import defaultDb from "@/data/db.json";
+import { CTASection } from "@/types/content";
 
 const CTAEditor = () => {
   const { data, updateSection, loading } = useContent();
@@ -18,7 +19,7 @@ const CTAEditor = () => {
   const defaultCTA = defaultDb.content.cta;
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
+  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm<CTASection>({
     defaultValues: defaultCTA || {},
   });
 
@@ -26,7 +27,7 @@ const CTAEditor = () => {
 
   const getPreviewData = () => {
     if (!watchedValues) return null;
-    return watchedValues;
+    return watchedValues as CTASection;
   };
 
   useEffect(() => {
@@ -37,9 +38,9 @@ const CTAEditor = () => {
         ...sourceData
       });
     }
-  }, [ctaData, reset]);
+  }, [ctaData, reset, defaultCTA]);
 
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: CTASection) => {
     try {
       await updateSection("cta", formData);
     } catch (error) {

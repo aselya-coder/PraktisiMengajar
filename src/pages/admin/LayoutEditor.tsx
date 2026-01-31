@@ -13,6 +13,11 @@ import { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import defaultDb from "@/data/db.json";
+import { HeaderSection, FooterSection } from "@/types/content";
+
+interface FooterFormValues extends Omit<FooterSection, 'services_list'> {
+  services_list: { value: string }[];
+}
 
 const LayoutEditor = () => {
   const { data, updateSection, loading } = useContent();
@@ -32,7 +37,7 @@ const LayoutEditor = () => {
     handleSubmit: handleSubmitHeader, 
     reset: resetHeader,
     formState: { isDirty: isHeaderDirty } 
-  } = useForm({
+  } = useForm<HeaderSection>({
     defaultValues: defaultHeader || {},
   });
 
@@ -50,7 +55,7 @@ const LayoutEditor = () => {
     handleSubmit: handleSubmitFooter, 
     reset: resetFooter,
     formState: { isDirty: isFooterDirty } 
-  } = useForm({
+  } = useForm<FooterFormValues>({
     defaultValues: {
       ...defaultFooter,
       services_list: defaultFooter.services_list.map(s => ({ value: s }))
@@ -71,7 +76,7 @@ const LayoutEditor = () => {
 
   const getHeaderPreviewData = () => {
     if (!watchedHeaderValues) return null;
-    return watchedHeaderValues;
+    return watchedHeaderValues as HeaderSection;
   };
 
   const getFooterPreviewData = () => {
@@ -79,9 +84,9 @@ const LayoutEditor = () => {
     return {
       ...watchedFooterValues,
       services_list: Array.isArray(watchedFooterValues.services_list) 
-        ? watchedFooterValues.services_list.map((s: any) => s.value) 
+        ? watchedFooterValues.services_list.map((s) => s?.value || "") 
         : []
-    };
+    } as FooterSection;
   };
 
   useEffect(() => {
@@ -97,14 +102,14 @@ const LayoutEditor = () => {
             ...defaultFooter,
             ...sourceFooter,
             services_list: Array.isArray(servicesList) 
-                ? servicesList.map((s: any) => (typeof s === 'string' ? { value: s } : s))
-                : []
+              ? servicesList.map((s: string | { value: string }) => (typeof s === 'string' ? { value: s } : s))
+              : []
         };
         resetFooter(formattedFooter);
     }
-  }, [headerData, footerData, resetHeader, resetFooter]);
+  }, [headerData, footerData, resetHeader, resetFooter, defaultHeader, defaultFooter]);
 
-  const onHeaderSubmit = async (formData: any) => {
+  const onHeaderSubmit = async (formData: HeaderSection) => {
     try {
       await updateSection("header", formData);
     } catch (error) {
@@ -113,12 +118,13 @@ const LayoutEditor = () => {
     }
   };
 
-  const onFooterSubmit = async (formData: any) => {
+  const onFooterSubmit = async (formData: FooterFormValues) => {
     try {
-      const cleanData = {
-          ...formData,
-          services_list: formData.services_list.map((s: any) => s.value)
+      const cleanData: FooterSection = {
+        ...formData,
+        services_list: formData.services_list.map((s) => s.value)
       };
+
       await updateSection("footer", cleanData);
     } catch (error) {
       console.error(error);

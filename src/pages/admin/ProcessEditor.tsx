@@ -12,6 +12,7 @@ import { iconMap } from "@/lib/iconMap";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Process from "@/components/Process";
 import defaultDb from "@/data/db.json";
+import { ProcessSection } from "@/types/content";
 
 const ProcessEditor = () => {
   const { data, updateSection, loading } = useContent();
@@ -19,7 +20,7 @@ const ProcessEditor = () => {
   const defaultProcess = defaultDb.content.process;
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
+  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm<ProcessSection>({
     defaultValues: defaultProcess || {},
   });
 
@@ -32,7 +33,7 @@ const ProcessEditor = () => {
 
   const getPreviewData = () => {
     if (!watchedValues) return null;
-    return watchedValues;
+    return watchedValues as ProcessSection;
   };
 
   useEffect(() => {
@@ -43,9 +44,9 @@ const ProcessEditor = () => {
         ...sourceData
       });
     }
-  }, [processData, reset]);
+  }, [processData, reset, defaultProcess]);
 
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: ProcessSection) => {
     try {
       await updateSection("process", formData);
     } catch (error) {

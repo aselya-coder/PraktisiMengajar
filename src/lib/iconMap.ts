@@ -21,10 +21,11 @@ import {
   Mail,
   MapPin,
   Menu,
-  X
+  X,
+  LucideIcon
 } from "lucide-react";
 
-export const iconMap: Record<string, any> = {
+export const iconMap: Record<string, LucideIcon> = {
   ArrowRight,
   MessageCircle,
   CheckCircle,

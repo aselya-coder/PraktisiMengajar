@@ -2,16 +2,17 @@ import { motion } from "framer-motion";
 import { MessageSquare, Search, CalendarCheck, Presentation } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 import { iconMap } from "@/lib/iconMap";
+import { ProcessSection } from "@/types/content";
 
 interface ProcessProps {
-  previewData?: any;
+  previewData?: ProcessSection;
 }
 
 const Process = ({ previewData }: ProcessProps) => {
   const { data } = useContent();
-  const processData = previewData || data?.process || {};
+  const processData = previewData || data?.process || {} as ProcessSection;
 
-  const steps = processData.steps?.map((s: any) => ({
+  const steps = processData.steps?.map((s) => ({
     ...s,
     icon: iconMap[s.icon] || MessageSquare
   })) || [

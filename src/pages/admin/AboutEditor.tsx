@@ -12,6 +12,11 @@ import { iconMap } from "@/lib/iconMap";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import About from "@/components/About";
 import defaultDb from "@/data/db.json";
+import { AboutSection } from "@/types/content";
+
+interface AboutFormValues extends Omit<AboutSection, 'features'> {
+  features: { value: string }[];
+}
 
 const AboutEditor = () => {
   const { data, updateSection, loading } = useContent();
@@ -19,7 +24,7 @@ const AboutEditor = () => {
   const defaultAbout = defaultDb.content.about;
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
+  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm<AboutFormValues>({
     defaultValues: {
       ...defaultAbout,
       features: defaultAbout.features.map(f => ({ value: f })),
@@ -33,9 +38,9 @@ const AboutEditor = () => {
     return {
       ...watchedValues,
       features: Array.isArray(watchedValues.features) 
-        ? watchedValues.features.map((f: any) => f.value) 
+        ? watchedValues.features.map((f) => f?.value || "") 
         : []
-    };
+    } as unknown as AboutSection;
   };
 
   const { fields: valueFields, append: appendValue, remove: removeValue } = useFieldArray({
@@ -60,20 +65,20 @@ const AboutEditor = () => {
         ...sourceData,
         // features is string array, map to objects for field array
         features: Array.isArray(features) 
-          ? features.map((f: any) => (typeof f === 'string' ? { value: f } : f))
+          ? features.map((f: string | { value: string }) => (typeof f === 'string' ? { value: f } : f))
           : [],
         values: values
       };
       reset(formattedData);
     }
-  }, [aboutData, reset]);
+  }, [aboutData, reset, defaultAbout]);
 
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: AboutFormValues) => {
     try {
-      const cleanData = {
+      const cleanData: AboutSection = {
         ...formData,
-        features: formData.features.map((f: any) => f.value)
-      };
+        features: formData.features.map((f) => f.value)
+      } as unknown as AboutSection;
       
       await updateSection("about", cleanData);
     } catch (error) {

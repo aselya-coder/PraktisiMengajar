@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import defaultDb from "@/data/db.json";
+import { SiteContent } from "@/types/content";
 
 const Dashboard = () => {
   const { data, loading, updateSection } = useContent();
@@ -34,14 +35,17 @@ const Dashboard = () => {
     try {
       // Use displayData (which might be defaultDb) to sync to Supabase
       // If data is empty, we are essentially "seeding" the database with defaultDb
-      const sourceData = displayData;
+      const sourceData = displayData as unknown as SiteContent;
       const sections = Object.keys(sourceData);
       let successCount = 0;
       
-      for (const section of sections) {
+      for (const sectionKey of sections) {
+        const section = sectionKey as keyof SiteContent;
         // Skip if section data is not an object (sanity check)
-        if (typeof sourceData[section] === 'object') {
-           await updateSection(section, sourceData[section]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (typeof (sourceData as any)[section] === 'object') {
+           // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           await updateSection(section, (sourceData as any)[section]);
            successCount++;
         }
       }

@@ -2,16 +2,17 @@ import { motion } from "framer-motion";
 import { GraduationCap, Users, Mic2, BookOpen, Clock, Award } from "lucide-react";
 import { useContent } from "../context/ContentContext";
 import { iconMap } from "@/lib/iconMap";
+import { ServicesSection } from "@/types/content";
 
 interface ServicesProps {
-  previewData?: any;
+  previewData?: ServicesSection;
 }
 
 const Services = ({ previewData }: ServicesProps) => {
   const { data } = useContent();
-  const servicesData = previewData || data?.services || {};
+  const servicesData = previewData || data?.services || {} as ServicesSection;
 
-  const services = servicesData.items?.map((s: any) => ({
+  const services = servicesData.items?.map((s) => ({
     ...s,
     icon: iconMap[s.icon] || GraduationCap
   })) || [
@@ -35,7 +36,7 @@ const Services = ({ previewData }: ServicesProps) => {
     },
   ];
 
-  const benefits = servicesData.benefits?.map((b: any) => ({
+  const benefits = servicesData.benefits?.map((b) => ({
     ...b,
     icon: iconMap[b.icon] || BookOpen
   })) || [
@@ -80,7 +81,7 @@ const Services = ({ previewData }: ServicesProps) => {
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {services.map((service: any, index: number) => (
+          {services.map((service, index: number) => (
             <motion.div
               key={service.title}
               initial={{ opacity: 0, y: 30 }}
@@ -124,7 +125,7 @@ const Services = ({ previewData }: ServicesProps) => {
           className="bg-muted rounded-2xl p-8 lg:p-12"
         >
           <div className="grid md:grid-cols-3 gap-8">
-            {benefits.map((benefit: any, index: number) => (
+            {benefits.map((benefit, index: number) => (
               <motion.div
                 key={benefit.title}
                 initial={{ opacity: 0, x: -20 }}

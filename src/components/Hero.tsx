@@ -3,14 +3,15 @@ import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, CheckCircle } from "lucide-react";
 import heroImage from "@/assets/hero-image.jpg";
 import { useContent } from "@/context/ContentContext";
+import { HeroSection } from "@/types/content";
 
 interface HeroProps {
-  previewData?: any;
+  previewData?: HeroSection;
 }
 
 const Hero = ({ previewData }: HeroProps) => {
   const { data } = useContent();
-  const heroData = previewData || data?.hero || {};
+  const heroData = previewData || data?.hero || {} as HeroSection;
 
   const badge = heroData.badge || "Mitra Pendidikan Terpercaya";
   const title = heroData.title || (

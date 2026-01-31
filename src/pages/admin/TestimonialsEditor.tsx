@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Testimonials from "@/components/Testimonials";
 import defaultDb from "@/data/db.json";
+import { TestimonialsSection } from "@/types/content";
 
 const TestimonialsEditor = () => {
   const { data, updateSection, loading } = useContent();
@@ -18,7 +19,7 @@ const TestimonialsEditor = () => {
   const defaultTestimonials = defaultDb.content.testimonials;
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
+  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm<TestimonialsSection>({
     defaultValues: defaultTestimonials || {},
   });
 
@@ -28,11 +29,11 @@ const TestimonialsEditor = () => {
     if (!watchedValues) return null;
     return {
       ...watchedValues,
-      items: watchedValues.items?.map((item: any) => ({
+      items: watchedValues.items?.map((item) => ({
         ...item,
         rating: Number(item.rating)
       })) || []
-    };
+    } as TestimonialsSection;
   };
 
   const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({
@@ -53,14 +54,14 @@ const TestimonialsEditor = () => {
         ...sourceData
       });
     }
-  }, [testimonialsData, reset]);
+  }, [testimonialsData, reset, defaultTestimonials]);
 
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: TestimonialsSection) => {
     try {
       // Ensure ratings are numbers
-      const cleanData = {
+      const cleanData: TestimonialsSection = {
         ...formData,
-        items: formData.items.map((item: any) => ({
+        items: formData.items.map((item) => ({
           ...item,
           rating: Number(item.rating)
         }))

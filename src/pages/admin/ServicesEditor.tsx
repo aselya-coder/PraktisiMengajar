@@ -12,6 +12,15 @@ import { iconMap } from "@/lib/iconMap";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 import Services from "@/components/Services";
 import defaultDb from "@/data/db.json";
+import { ServicesSection, ServiceItem } from "@/types/content";
+
+interface ServiceItemWithString extends ServiceItem {
+  featuresString: string;
+}
+
+interface ServicesFormValues extends Omit<ServicesSection, 'items'> {
+  items: ServiceItemWithString[];
+}
 
 const ServicesEditor = () => {
   const { data, updateSection, loading } = useContent();
@@ -19,7 +28,7 @@ const ServicesEditor = () => {
   const defaultServices = defaultDb.content.services;
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm({
+  const { register, control, handleSubmit, reset, formState: { isDirty } } = useForm<ServicesFormValues>({
     defaultValues: {
       ...defaultServices,
       items: defaultServices.items.map(item => ({
@@ -45,11 +54,11 @@ const ServicesEditor = () => {
     if (!watchedValues) return null;
     return {
       ...watchedValues,
-      items: watchedValues.items?.map((item: any) => ({
+      items: watchedValues.items?.map((item) => ({
         ...item,
-        features: item.featuresString ? item.featuresString.split("\n").filter((f: string) => f.trim() !== "") : (item.features || [])
+        features: item?.featuresString ? item.featuresString.split("\n").filter((f) => f.trim() !== "") : (item?.features || [])
       })) || []
-    };
+    } as unknown as ServicesSection;
   };
 
   useEffect(() => {
@@ -61,25 +70,27 @@ const ServicesEditor = () => {
       const formattedData = {
         ...defaultServices,
         ...sourceData,
-        items: items.map((item: any) => ({
+        items: items.map((item: ServiceItem) => ({
           ...item,
           featuresString: item.features ? item.features.join("\n") : ""
         }))
       };
       reset(formattedData);
     }
-  }, [servicesData, reset]);
+  }, [servicesData, reset, defaultServices]);
 
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: ServicesFormValues) => {
     try {
-      const cleanData = {
+      const cleanData: ServicesSection = {
         ...formData,
-        items: formData.items.map((item: any) => ({
-          ...item,
-          features: item.featuresString.split("\n").filter((f: string) => f.trim() !== ""),
-          // Remove the temporary string field
-        })).map(({ featuresString, ...rest }: any) => rest)
-      };
+        items: formData.items.map((item) => {
+          const { featuresString, ...rest } = item;
+          return {
+            ...rest,
+            features: featuresString.split("\n").filter((f) => f.trim() !== "")
+          };
+        })
+      } as unknown as ServicesSection;
       
       await updateSection("services", cleanData);
     } catch (error) {
