@@ -76,13 +76,9 @@ const Hero = ({ previewData }: HeroProps) => {
 
             {/* Headline */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6 whitespace-pre-line">
-              {heroData.title ? heroData.title : (
-                <>
-                Hadirkan{" "}
-                <span className="text-gradient">Praktisi Industri</span>{" "}
-                ke Ruang Kelas Anda
-                </>
-              )}
+              Hadirkan{" "}
+              <span className="text-gradient">Praktisi Industri</span>{" "}
+              ke Ruang Kelas Anda
             </h1>
 
             {/* Subheadline */}
