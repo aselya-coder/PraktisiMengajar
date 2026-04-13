@@ -68,6 +68,8 @@ const TestimonialsEditor = () => {
       };
 
       await updateSection("testimonials", cleanData);
+      toast.success("Testimonials section updated successfully!");
+      reset(cleanData);
     } catch (error) {
       console.error(error);
       toast.error("Failed to save changes");

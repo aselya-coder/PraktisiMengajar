@@ -81,6 +81,14 @@ const AboutEditor = () => {
       } as unknown as AboutSection;
       
       await updateSection("about", cleanData);
+      toast.success("About section updated successfully!");
+
+      // Reset form with the new data to reflect the saved state
+      const formattedData = {
+        ...cleanData,
+        features: cleanData.features.map(f => ({ value: f })),
+      };
+      reset(formattedData);
     } catch (error) {
       console.error(error);
       toast.error("Failed to save changes");

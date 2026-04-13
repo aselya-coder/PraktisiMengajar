@@ -75,6 +75,31 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   useEffect(() => {
     fetchData();
+
+    // Subscribe to real-time changes using modern Supabase API
+    const channel = supabase
+      .channel("sections-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "sections",
+        },
+        (payload) => {
+          console.log("Real-time update received:", payload);
+          // Refresh data when changes detected
+          fetchData();
+        }
+      )
+      .subscribe((status) => {
+        console.log("Real-time subscription status:", status);
+      });
+
+    // Cleanup subscription on unmount
+    return () => {
+      channel.unsubscribe();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

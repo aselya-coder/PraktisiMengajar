@@ -82,6 +82,14 @@ const HeroEditor = () => {
       } as unknown as HeroSection;
       
       await updateSection("hero", cleanData);
+      toast.success("Hero section updated successfully!");
+
+      // Reset form with the new data to reflect the saved state
+      const formattedData = {
+        ...cleanData,
+        benefits: cleanData.benefits.map(b => ({ value: b })),
+      };
+      reset(formattedData);
     } catch (error) {
       console.error(error);
       toast.error("Failed to save changes");

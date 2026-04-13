@@ -49,6 +49,8 @@ const ProcessEditor = () => {
   const onSubmit = async (formData: ProcessSection) => {
     try {
       await updateSection("process", formData);
+      toast.success("Process section updated successfully!");
+      reset(formData);
     } catch (error) {
       console.error(error);
       toast.error("Failed to save changes");

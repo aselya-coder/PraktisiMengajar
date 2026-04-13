@@ -43,6 +43,8 @@ const CTAEditor = () => {
   const onSubmit = async (formData: CTASection) => {
     try {
       await updateSection("cta", formData);
+      toast.success("CTA section updated successfully!");
+      reset(formData); // Reset form with the new data
     } catch (error) {
       console.error(error);
       toast.error("Failed to save CTA section");

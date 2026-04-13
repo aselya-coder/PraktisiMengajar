@@ -93,6 +93,17 @@ const ServicesEditor = () => {
       } as unknown as ServicesSection;
       
       await updateSection("services", cleanData);
+      toast.success("Services section updated successfully!");
+      
+      // Reset form with the new data to reflect the saved state
+      const formattedData = {
+        ...cleanData,
+        items: cleanData.items.map((item: ServiceItem) => ({
+          ...item,
+          featuresString: item.features ? item.features.join("\n") : ""
+        }))
+      };
+      reset(formattedData);
     } catch (error) {
       console.error(error);
       toast.error("Failed to save changes");
